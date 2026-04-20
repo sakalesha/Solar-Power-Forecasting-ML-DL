@@ -33,7 +33,7 @@ from src.config import (
     FEATURE_COLS, TARGET,
 )
 from src.data_loader      import load_and_standardise
-from src.preprocessing    import full_pipeline
+from src.preprocessing    import full_pipeline, inverse_scale_y
 from src.features         import engineer_features, build_sequences
 from src.evaluate         import compute_metrics, build_comparison_table, print_metrics
 from src.models.baseline  import LinearRegressionModel, RandomForestModel, XGBoostModel
@@ -113,10 +113,14 @@ def load_data(site: str = ACTIVE_SITE) -> tuple:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def train_baseline(model_name: str, data: dict) -> dict:
-    """Fit and evaluate a baseline model."""
-    X_tr, y_tr = data["train"]
-    X_va, y_va = data["val"]
-    X_te, y_te = data["test"]
+    """Fit and evaluate a baseline model (uses raw, unscaled y in Watts)."""
+    X_tr, _      = data["train"]
+    X_va, _      = data["val"]
+    X_te, _      = data["test"]
+    # Baselines use raw Watt values
+    y_tr = data["y_train_raw"]
+    y_va = data["y_val_raw"]
+    y_te = data["y_test_raw"]
 
     model_map = {"lr": LinearRegressionModel, "rf": RandomForestModel, "xgb": XGBoostModel}
     ModelClass = model_map[model_name]
@@ -140,15 +144,17 @@ def train_baseline(model_name: str, data: dict) -> dict:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def train_dl(model_name: str, data: dict, epochs: int = CFG_EPOCHS) -> dict:
-    """Fit and evaluate a deep learning model."""
-    X_tr, y_tr = data["train"]
-    X_va, y_va = data["val"]
-    X_te, y_te = data["test"]
+    """Fit and evaluate a deep learning model (trains on scaled y, reports in Watts)."""
+    X_tr, y_tr_sc = data["train"]
+    X_va, y_va_sc = data["val"]
+    X_te, y_te_sc = data["test"]
+    y_scaler      = data["y_scaler"]
+    y_te_raw      = data["y_test_raw"]  # Watts — for metrics
 
-    # Build sequences
-    X_tr_seq, y_tr_seq = build_sequences(X_tr.values, y_tr.values, LOOKBACK)
-    X_va_seq, y_va_seq = build_sequences(X_va.values, y_va.values, LOOKBACK)
-    X_te_seq, y_te_seq = build_sequences(X_te.values, y_te.values, LOOKBACK)
+    # Build sequences from scaled data
+    X_tr_seq, y_tr_seq = build_sequences(X_tr.values, y_tr_sc, LOOKBACK)
+    X_va_seq, y_va_seq = build_sequences(X_va.values, y_va_sc, LOOKBACK)
+    X_te_seq, y_te_seq = build_sequences(X_te.values, y_te_sc, LOOKBACK)
 
     n_features = X_tr.shape[1]
     print(f"\n🧠 DL Input shape: ({LOOKBACK}, {n_features})")
@@ -167,7 +173,7 @@ def train_dl(model_name: str, data: dict, epochs: int = CFG_EPOCHS) -> dict:
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"  Trainable parameters: {total_params:,}")
 
-    # Train
+    # Train on scaled y
     trainer = Trainer(model, patience=10)
     trainer.fit(tr_loader, va_loader, epochs=epochs)
     trainer.save_model()
@@ -180,10 +186,14 @@ def train_dl(model_name: str, data: dict, epochs: int = CFG_EPOCHS) -> dict:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     history.to_csv(RESULTS_DIR / f"{model_name}_loss_history.csv", index=False)
 
-    # Evaluate
-    y_pred   = trainer.predict(te_loader)
-    y_true   = y_te_seq
-    metrics  = compute_metrics(y_true, y_pred, label=model_name.upper())
+    # Predict (outputs are in 0-1 scale) then inverse-transform to Watts
+    y_pred_sc = trainer.predict(te_loader)          # shape (N,) in [0,1]
+    y_pred    = inverse_scale_y(y_pred_sc, y_scaler)  # back to Watts
+
+    # Align lengths (sequences drop first `lookback` rows)
+    y_true = y_te_raw.values[-len(y_pred):]
+
+    metrics = compute_metrics(y_true, y_pred, label=model_name.upper())
     print_metrics(metrics)
     return metrics
 

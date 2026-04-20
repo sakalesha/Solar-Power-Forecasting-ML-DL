@@ -255,6 +255,34 @@ def load_scaler(path: Path) -> StandardScaler | MinMaxScaler:
     return joblib.load(path)
 
 
+def fit_y_scaler(
+    y_train: pd.Series,
+    save_path: Path | None = None,
+) -> MinMaxScaler:
+    """
+    Fit a MinMaxScaler on the training target series.
+    MinMax (0-1) is preferred over Standard for y because power
+    generation is bounded below by zero.
+    """
+    scaler = MinMaxScaler()
+    scaler.fit(y_train.values.reshape(-1, 1))
+    if save_path:
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(scaler, save_path)
+        print(f"💾 Y-Scaler saved → {save_path}")
+    return scaler
+
+
+def scale_y(y: pd.Series, scaler: MinMaxScaler) -> np.ndarray:
+    """Scale a 1-D target series using a fitted MinMaxScaler."""
+    return scaler.transform(y.values.reshape(-1, 1)).ravel()
+
+
+def inverse_scale_y(y_scaled: np.ndarray, scaler: MinMaxScaler) -> np.ndarray:
+    """Inverse-transform scaled predictions back to original Watt units."""
+    return scaler.inverse_transform(y_scaled.reshape(-1, 1)).ravel()
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # FULL PIPELINE  (convenience function)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -272,11 +300,15 @@ def full_pipeline(
     Returns
     -------
     {
-        "train": (X_train_scaled, y_train),
-        "val":   (X_val_scaled,   y_val),
-        "test":  (X_test_scaled,  y_test),
-        "scaler": scaler,
-        "feature_cols": available_features,
+        "train": (X_train_scaled, y_train_scaled),   # for DL models
+        "val":   (X_val_scaled,   y_val_scaled),
+        "test":  (X_test_scaled,  y_test_scaled),
+        "y_train_raw": y_tr,   # original Watt values for baseline models
+        "y_val_raw":   y_va,
+        "y_test_raw":  y_te,
+        "scaler":   X feature scaler,
+        "y_scaler": y target MinMaxScaler,
+        "feature_cols": list[str],
         "train_df": train_df,
         "val_df":   val_df,
         "test_df":  test_df,
@@ -293,18 +325,31 @@ def full_pipeline(
     X_va, y_va = get_xy(val_df,   feature_cols, target)
     X_te, y_te = get_xy(test_df,  feature_cols, target)
 
-    # Scale — fit only on train
+    # Scale X — fit only on train
     scaler_path = MODELS_DIR / "scaler.joblib"
     scaler = fit_scaler(X_tr, save_path=scaler_path)
     X_tr_sc = apply_scaler(X_tr, scaler)
     X_va_sc = apply_scaler(X_va, scaler)
     X_te_sc = apply_scaler(X_te, scaler)
 
+    # Scale y — fit only on train (MinMax 0-1 for DL stability)
+    y_scaler_path = MODELS_DIR / "y_scaler.joblib"
+    y_scaler = fit_y_scaler(y_tr, save_path=y_scaler_path)
+    y_tr_sc = scale_y(y_tr, y_scaler)
+    y_va_sc = scale_y(y_va, y_scaler)
+    y_te_sc = scale_y(y_te, y_scaler)
+
     return {
-        "train":        (X_tr_sc, y_tr),
-        "val":          (X_va_sc, y_va),
-        "test":         (X_te_sc, y_te),
+        # Scaled versions (used by DL models)
+        "train":        (X_tr_sc, y_tr_sc),
+        "val":          (X_va_sc, y_va_sc),
+        "test":         (X_te_sc, y_te_sc),
+        # Raw watt values (used by baseline models & metrics)
+        "y_train_raw":  y_tr,
+        "y_val_raw":    y_va,
+        "y_test_raw":   y_te,
         "scaler":       scaler,
+        "y_scaler":     y_scaler,
         "feature_cols": X_tr.columns.tolist(),
         "train_df":     train_df,
         "val_df":       val_df,
