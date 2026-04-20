@@ -141,7 +141,8 @@ class XGBoostModel(BaseModel):
 
     def __init__(self, **kwargs):
         params = {**XGB_PARAMS, **kwargs}
-        self.model = XGBRegressor(**params)
+        # XGBoost 2.0+: early_stopping_rounds goes in the constructor
+        self.model = XGBRegressor(**params, early_stopping_rounds=20)
 
     def fit(
         self,
@@ -149,19 +150,17 @@ class XGBoostModel(BaseModel):
         y_train,
         X_val=None,
         y_val=None,
-        early_stopping_rounds: int = 20,
         verbose: bool = True,
     ):
         print(f"🚀 Training {self.name} "
               f"({self.model.n_estimators} estimators)...")
 
-        eval_set   = [(X_val, y_val)] if X_val is not None else None
-        verbosity  = 50 if verbose else 0
+        eval_set  = [(X_val, y_val)] if X_val is not None else None
+        verbosity = 50 if verbose else 0
 
         self.model.fit(
             X_train, y_train,
             eval_set = eval_set,
-            early_stopping_rounds = early_stopping_rounds if eval_set else None,
             verbose  = verbosity,
         )
         best = getattr(self.model, "best_iteration", self.model.n_estimators)
