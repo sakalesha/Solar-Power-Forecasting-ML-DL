@@ -54,6 +54,32 @@ pip install -r requirements.txt
 
 ---
 
+## ☁️ Running on Google Colab
+
+This project is fully compatible with Google Colab and integrates with Google Drive for handling the large raw datasets (which cannot be stored directly on GitHub).
+
+1. Upload the raw data (`FPV_Oakville_CA_data.csv`) into a folder in your Google Drive named `Solar-Power-Forecasting-Data`.
+2. Open a new Colab Notebook and run the following setup commands:
+
+```python
+# 1. Clone the repository
+!git clone https://github.com/sakalesha/Solar-Power-Forecasting-ML-DL.git
+
+# 2. Change working directory
+%cd Solar-Power-Forecasting-ML-DL
+
+# 3. Install requirements
+!pip install -r requirements.txt
+
+# 4. Mount Google Drive so config.py can automatically find the raw data
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+After doing this, you can run `!python src/train.py --models all` or open the python notebooks directly!
+
+---
+
 ## 🗂️ Dataset
 
 - **Site**: Oakville, CA (floating PV system)

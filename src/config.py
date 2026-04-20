@@ -7,6 +7,8 @@ live here so every other module imports from a single source of truth.
 
 from pathlib import Path
 
+import os
+
 # ─────────────────────────────────────────────────────────────────────────────
 # PATHS
 # ─────────────────────────────────────────────────────────────────────────────
@@ -19,10 +21,18 @@ MODELS_DIR = OUTPUTS / "models"
 FIGS_DIR   = OUTPUTS / "figures"
 RESULTS_DIR= OUTPUTS / "results"
 
+# --- Google Colab / GDrive Compatibility ---
+# If running in Colab, raw CSVs can be loaded directly from Google Drive
+COLAB_DRIVE_DOCS = Path("/content/drive/MyDrive/Solar-Power-Forecasting-Data")
+if "COLAB_GPU" in os.environ or "COLAB_RELEASE_TAG" in os.environ:
+    if COLAB_DRIVE_DOCS.exists():
+        DOCS = COLAB_DRIVE_DOCS
+
 # Source CSVs (in docs/ — large files kept there, not in data/raw)
 OAKVILLE_CSV   = DOCS / "FPV_Oakville_CA_data.csv"
 ORLANDO_CSV    = DOCS / "FPV_Orlando_FL_data.csv"
 METAFILE_XLSX  = DOCS / "FPV_metafile_mm.xlsx"
+
 
 # Processed parquet outputs
 OAKVILLE_PARQUET = DATA_PROC / "oakville_15min.parquet"
