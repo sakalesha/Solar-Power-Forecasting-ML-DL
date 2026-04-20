@@ -46,7 +46,7 @@ python -m venv .venv
 pip install -r requirements.txt
 
 # 3. Link raw data (Windows — run as admin or copy manually)
-# Copy docs/FPV_Oakville_CA_data.csv → data/raw/FPV_Oakville_CA_data.csv
+# Copy docs/FPV_Orlando_FL_data.csv → data/raw/FPV_Orlando_FL_data.csv
 
 # 4. Open notebooks in VS Code (Jupyter extension required)
 # Each .py file in notebooks/ uses # %% cell separators
@@ -58,7 +58,7 @@ pip install -r requirements.txt
 
 This project is fully compatible with Google Colab and integrates with Google Drive for handling the large raw datasets (which cannot be stored directly on GitHub).
 
-1. Upload the raw data (`FPV_Oakville_CA_data.csv`) into a folder in your Google Drive named `Solar-Power-Forecasting-Data`.
+1. Upload the raw data (`FPV_Orlando_FL_data.csv`) into a folder in your Google Drive named `Solar-Power-Forecasting-Data`.
 2. Open a new Colab Notebook and run the following setup commands:
 
 ```python
@@ -82,7 +82,7 @@ After doing this, you can run `!python src/train.py --models all` or open the py
 
 ## 🗂️ Dataset
 
-- **Site**: Oakville, CA (floating PV system)
+- **Site**: orlando, CA (floating PV system)
 - **Source**: [OpenEI High-Resolution Floating Solar PV Data](https://openei.org)
 - **Raw resolution**: 1-minute intervals (~1M rows)
 - **Processed resolution**: **15-minute** resampled (~65K rows)
@@ -117,17 +117,17 @@ After doing this, you can run `!python src/train.py --models all` or open the py
 ## 🚀 Quick Start
 
 ```bash
-# Run training for all baseline models on Oakville data
-python src/train.py --models all --site oakville
+# Run training for all baseline models on orlando data
+python src/train.py --models all --site orlando
 
 # Train only LSTM
-python src/train.py --models lstm --site oakville --epochs 50
+python src/train.py --models lstm --site orlando --epochs 50
 ```
 
 ---
 
 ## 📚 References
 
-- OpenEI Floating PV Dataset (Oakville, CA & Orlando, FL)
+- OpenEI Floating PV Dataset (orlando, CA & Orlando, FL)
 - Deep Research Report: `docs/deep-research-report.md`
 - Literature: Papers 1.a, 1.b, 1.c (see `docs/`)

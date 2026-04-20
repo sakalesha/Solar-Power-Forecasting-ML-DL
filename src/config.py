@@ -40,7 +40,7 @@ OAKVILLE_PARQUET = DATA_PROC / "oakville_15min.parquet"
 # ─────────────────────────────────────────────────────────────────────────────
 # SITE SETTINGS
 # ─────────────────────────────────────────────────────────────────────────────
-ACTIVE_SITE = "oakville"   # "oakville" | "orlando"
+ACTIVE_SITE = "orlando"   # "oakville" | "orlando"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # DATA SENTINELS  (values that represent sensor errors / missing data)
