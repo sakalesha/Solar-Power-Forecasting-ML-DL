@@ -50,7 +50,7 @@ SENTINEL_VALUES = [32767.0, 32766.0, -99.0]
 # ─────────────────────────────────────────────────────────────────────────────
 # TARGET VARIABLE
 # ─────────────────────────────────────────────────────────────────────────────
-TARGET = "INVPWR"          # Inverter AC Power Output (Watts)
+TARGET = "target"          # Inverter AC Power Output (Watts)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # COLUMN NAMES  (common across both sites — superset)

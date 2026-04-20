@@ -201,7 +201,6 @@ def engineer_features(
     # Drop the initial rows where lags create NaNs
     max_lag = max(lags) if lags else 0
     df = df.iloc[max_lag:]
-    df = df.dropna()
 
     print(f"✅ Feature engineering complete: {len(df):,} rows, "
           f"{len(df.columns)} columns (incl. target)")
