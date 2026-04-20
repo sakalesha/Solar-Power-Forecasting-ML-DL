@@ -58,7 +58,7 @@ def set_seed(seed: int = SEED) -> None:
 # DATA LOADING & PREP
 # ─────────────────────────────────────────────────────────────────────────────
 
-def load_data(site: str = "oakville") -> tuple:
+def load_data(site: str = ACTIVE_SITE) -> tuple:
     """
     Load→clean→feature-engineer the site data.
     Returns (data_dict, feature_cols) ready for modelling.
@@ -203,9 +203,9 @@ def parse_args():
         help="Which models to train (default: all)"
     )
     parser.add_argument(
-        "--site", type=str, default="oakville",
+        "--site", type=str, default=ACTIVE_SITE,
         choices=["oakville", "orlando"],
-        help="Which site dataset to use"
+        help=f"Which site dataset to use (default: {ACTIVE_SITE} from config.py)"
     )
     parser.add_argument(
         "--epochs", type=int, default=CFG_EPOCHS,
