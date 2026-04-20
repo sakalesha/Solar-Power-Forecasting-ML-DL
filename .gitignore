@@ -1,0 +1,43 @@
+# ── Python ────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ── Virtual environments ───────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Jupyter ───────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Large Data Files ──────────────────────────────────
+data/raw/*.csv
+data/raw/*.xlsx
+data/processed/*.parquet
+data/processed/*.csv
+docs/*.csv
+docs/*.pdf
+docs/*.xlsx
+
+# ── Model Outputs ─────────────────────────────────────
+outputs/models/*.pt
+outputs/models/*.pkl
+outputs/models/*.joblib
+
+# ── OS / IDE ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Logs & tmp ────────────────────────────────────────
+*.log
+tmp/
