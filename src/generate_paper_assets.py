@@ -735,7 +735,10 @@ def generate_tables(df: pd.DataFrame):
             "R²":       [0.934, 0.926, 0.938, 0.90, 0.836, 0.88],
         }).set_index("Model")
     t4.to_csv(TABLE_DIR / "Table4_Performance_Comparison.csv")
-    print("  ✅ Table 4 saved")
+    print("\n" + "─"*70)
+    print("  Table 4: Performance Comparison — All Models (RMSE, MAE, R²)")
+    print("─"*70)
+    print(t4.to_string())
 
     # ── Table 5: Training time ─────────────────────────────────────────────────
     t5 = pd.DataFrame({
@@ -746,7 +749,10 @@ def generate_tables(df: pd.DataFrame):
         "Inference Speed": ["Very Fast", "Fast", "Fast", "Moderate", "Fast", "Moderate"],
     })
     t5.to_csv(TABLE_DIR / "Table5_Training_Complexity.csv", index=False)
-    print("  ✅ Table 5 saved")
+    print("\n" + "─"*70)
+    print("  Table 5: Training Time and Computational Complexity")
+    print("─"*70)
+    print(t5.to_string(index=False))
 
     # ── Table 6: Seasonal comparison ──────────────────────────────────────────
     if metrics is not None:
@@ -763,7 +769,10 @@ def generate_tables(df: pd.DataFrame):
         "R²":       [0.952, 0.941, 0.938, 0.921, 0.946, 0.935, 0.930, 0.910],
     })
     t6.to_csv(TABLE_DIR / "Table6_Seasonal_Performance.csv", index=False)
-    print("  ✅ Table 6 saved")
+    print("\n" + "─"*70)
+    print("  Table 6: Seasonal Performance Comparison of Models")
+    print("─"*70)
+    print(t6.to_string(index=False))
 
     # ── Table 7: Feature importance ───────────────────────────────────────────
     rf_path = MODELS_DIR / "random_forest.joblib"
@@ -786,7 +795,11 @@ def generate_tables(df: pd.DataFrame):
             "Importance": [0.412, 0.238, 0.112, 0.087, 0.063, 0.051, 0.037],
         }).set_index("Rank")
     t7.to_csv(TABLE_DIR / "Table7_Feature_Importance.csv")
-    print("  ✅ Table 7 saved")
+    print("\n" + "─"*70)
+    print("  Table 7: Feature Importance Ranking (Random Forest)")
+    print("─"*70)
+    print(t7.to_string())
+    print("")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
