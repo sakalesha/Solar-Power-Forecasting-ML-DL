@@ -671,7 +671,10 @@ def generate_tables(df: pd.DataFrame):
         "Unit": ["W/m²", "°C", "%", "m/s", "hPa", "W"],
     })
     t1.to_csv(TABLE_DIR / "Table1_Dataset_Features.csv", index=False)
-    print("  ✅ Table 1 saved")
+    print("\n" + "─"*70)
+    print("  Table 1: Summary of Dataset Features and Description")
+    print("─"*70)
+    print(t1.to_string(index=False))
 
     # ── Table 2: Statistical summary ──────────────────────────────────────────
     cols_of_interest = ["FPHIRR", "FAMBTM", "FPV_RH", "FWINDS", "FVPRES", "INVPWR"]
@@ -683,7 +686,10 @@ def generate_tables(df: pd.DataFrame):
                  .replace("FVPRES","Pressure").replace("INVPWR","PV Power")
                  for c in t2.index]
     t2.to_csv(TABLE_DIR / "Table2_Statistical_Summary.csv")
-    print("  ✅ Table 2 saved")
+    print("\n" + "─"*70)
+    print("  Table 2: Statistical Summary (mean, std, min, median, max)")
+    print("─"*70)
+    print(t2.to_string())
 
     # ── Table 3: Hyperparameters ───────────────────────────────────────────────
     t3 = pd.DataFrame([
@@ -711,7 +717,10 @@ def generate_tables(df: pd.DataFrame):
         ["All DL",            "patience",      "10",   "Early stopping patience"],
     ], columns=["Model", "Hyperparameter", "Value", "Description"])
     t3.to_csv(TABLE_DIR / "Table3_Hyperparameters.csv", index=False)
-    print("  ✅ Table 3 saved")
+    print("\n" + "─"*70)
+    print("  Table 3: Hyperparameters Used for Each Model")
+    print("─"*70)
+    print(t3.to_string(index=False))
 
     # ── Table 4: Performance comparison ───────────────────────────────────────
     if metrics is not None:
