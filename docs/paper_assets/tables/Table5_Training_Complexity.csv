@@ -1,0 +1,7 @@
+Model,Training Time,Parameters,Complexity,Inference Speed
+Linear Regression,< 1 s,13,Low,Very Fast
+Random Forest,~25 s,~45K nodes,Medium,Fast
+XGBoost,~8 s,300 trees,Medium,Fast
+LSTM,~360 s,"86,849",High,Moderate
+CNN,~180 s,"52,545",High,Fast
+CNN-LSTM,~220 s,"69,185",High,Moderate

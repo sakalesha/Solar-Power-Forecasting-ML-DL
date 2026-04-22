@@ -1,0 +1,9 @@
+Season,Model,RMSE (W),MAE (W),R²
+Spring,XGBoost,1420,780,0.952
+Summer,XGBoost,1580,880,0.941
+Autumn,XGBoost,1610,900,0.938
+Winter,XGBoost,1890,1100,0.921
+Spring,Linear Regression,1540,860,0.946
+Summer,Linear Regression,1720,960,0.935
+Autumn,Linear Regression,1750,990,0.93
+Winter,Linear Regression,2100,1200,0.91

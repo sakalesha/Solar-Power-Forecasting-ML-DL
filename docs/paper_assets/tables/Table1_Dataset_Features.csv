@@ -1,0 +1,7 @@
+Feature Name,Raw Column,Standard Name,Description,Unit
+Solar Irradiance,FPHIRR,irr_horiz,Horizontal plane solar irradiance,W/m²
+Ambient Temperature,FAMBTM,amb_temp,Dry-bulb ambient air temperature,°C
+Relative Humidity,FPV_RH,rh,Percentage moisture in air,%
+Wind Speed,FWINDS,wind_speed,Wind velocity at site,m/s
+Atmospheric Pressure,FVPRES,pressure,Atmospheric pressure at sensor,hPa
+PV Power Output (Target),INVPWR,target,AC inverter power output,W

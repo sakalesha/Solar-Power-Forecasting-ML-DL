@@ -1,0 +1,23 @@
+Model,Hyperparameter,Value,Description
+Linear Regression,alpha (Ridge),0.1,Ridge regularisation
+Random Forest,n_estimators,200,Number of trees
+Random Forest,max_depth,None,Unlimited depth
+Random Forest,min_samples_leaf,2,Min samples per leaf
+XGBoost,n_estimators,300,Boosting rounds
+XGBoost,max_depth,6,Tree depth
+XGBoost,learning_rate,0.05,Shrinkage factor
+XGBoost,early_stopping,20,Patience rounds
+LSTM,hidden_size,64,LSTM units per layer
+LSTM,num_layers,3,Stacked LSTM layers
+LSTM,dropout,0.2,Regularisation
+LSTM,lookback,16,Input sequence (16 × 15 min = 4 hrs)
+1D-CNN,filters,64/128/64,Conv filter sizes
+1D-CNN,kernel_size,3,Convolution kernel
+1D-CNN,pooling,MaxPool(2),Spatial reduction
+CNN-LSTM,cnn_filters,64,CNN feature maps
+CNN-LSTM,lstm_hidden,64,LSTM hidden units
+CNN-LSTM,lstm_layers,2,LSTM depth
+All DL,batch_size,256,Mini-batch size
+All DL,epochs,50,Max training epochs
+All DL,learning_rate,1e-3,Adam optimiser LR
+All DL,patience,10,Early stopping patience
