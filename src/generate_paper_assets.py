@@ -88,14 +88,18 @@ def load_dataset(nrows=200_000):
     df = pd.read_csv(csv, index_col=0, low_memory=False, nrows=nrows)
     df = df.replace(SENTINEL_VALUES, np.nan)
 
-    # Parse timestamp
+    # Parse timestamp from YYYYDDD + HH:MM:SS
     year = (df["DAY"] // 1000).astype(str)
     doy  = (df["DAY"] % 1000).astype(str).str.zfill(3)
     df["timestamp"] = pd.to_datetime(
         year + "-" + doy + " " + df["HOUR"].astype(str),
         format="%Y-%j %H:%M:%S", errors="coerce"
     )
+    # Drop originals so only numeric columns remain
+    df = df.drop(columns=["DAY", "HOUR"], errors="ignore")
     df = df.dropna(subset=["timestamp"]).set_index("timestamp").sort_index()
+    # Keep only numeric columns (removes any stray string columns)
+    df = df.select_dtypes(include="number")
     df = df[df["INVPWR"].notna() & (df["INVPWR"] >= 0) & (df["INVPWR"] != 32767)]
     return df
 
@@ -238,11 +242,11 @@ def fig3_timeseries(df: pd.DataFrame):
     # Pick a clear sunny week
     subset = df[df["FPHIRR"].notna() & df["INVPWR"].notna()]
     # Use a 7-day window with good data
-    sub = subset["2022-07-01":"2022-07-14"].resample("15min").mean().dropna(
+    sub = subset["2022-07-01":"2022-07-14"].resample("15min").mean(numeric_only=True).dropna(
         subset=["FPHIRR", "INVPWR"])
 
     if len(sub) < 10:
-        sub = subset.iloc[:500].resample("15min").mean().dropna(subset=["FPHIRR", "INVPWR"])
+        sub = subset.iloc[:500].resample("15min").mean(numeric_only=True).dropna(subset=["FPHIRR", "INVPWR"])
 
     fig, ax1 = plt.subplots(figsize=(FIG_W, FIG_H))
     ax2 = ax1.twinx()
