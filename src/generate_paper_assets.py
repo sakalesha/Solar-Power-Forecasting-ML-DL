@@ -22,8 +22,22 @@ PAPER_DIR = DOCS_DIR / "paper_assets"
 FIG_DIR = PAPER_DIR / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-# Define dataset
-DATA_PATH = DOCS_DIR / "FPV_Orlando_FL_data.csv"
+# Define dataset locations to be resilient (Local vs Google Colab)
+DATA_FILE = "FPV_Orlando_FL_data.csv"
+LOCAL_PATH = DOCS_DIR / DATA_FILE
+COLAB_PATH_SUBDIR = Path("/content/drive/MyDrive/Solar-Power-Forecasting-Data") / DATA_FILE
+COLAB_PATH_ROOT = Path("/content/drive/MyDrive") / DATA_FILE
+
+if LOCAL_PATH.exists():
+    DATA_PATH = LOCAL_PATH
+elif COLAB_PATH_SUBDIR.exists():
+    DATA_PATH = COLAB_PATH_SUBDIR
+elif COLAB_PATH_ROOT.exists():
+    DATA_PATH = COLAB_PATH_ROOT
+else:
+    # We delay the crash until runtime so the script can import, 
+    # but store the string for the error
+    DATA_PATH = None
 
 def mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / (np.abs(y_true) + 1e-6))) * 100
@@ -92,6 +106,12 @@ def main():
     draw_fig2()
     
     print("Loading subset of data for fast execution...")
+    if DATA_PATH is None or not Path(DATA_PATH).exists():
+        raise FileNotFoundError(
+            "Could not find FPV_Orlando_FL_data.csv!\n"
+            "If using Colab, ensure Google Drive is mounted AND the CSV is placed either in "
+            "'/content/drive/MyDrive/Solar-Power-Forecasting-Data/' or '/content/drive/MyDrive/'."
+        )
     df = pd.read_csv(DATA_PATH, nrows=40000) 
     
     df = df.replace([32767.0, 32766.0, -99.0], np.nan)
