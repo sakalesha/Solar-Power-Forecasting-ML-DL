@@ -31,6 +31,7 @@ def _julian_to_datetime(day_series: pd.Series, hour_series: pd.Series) -> pd.Ser
     ----------
     day_series  : int series, e.g. 2022216
     hour_series : str series, e.g. '13:45:00'
+    # Example: 2022216 + 13:45:00 -> 2022-08-03 13:45:00
 
     Returns
     -------

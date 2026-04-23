@@ -3,6 +3,16 @@ config.py — Central configuration for the Solar Power Forecasting project.
 
 All paths, column names, sentinel values, hyperparameters and model settings
 live here so every other module imports from a single source of truth.
+
+Path Management
+Environment Compatibility
+Site Switching: orlando and oakville
+Schema Mapping: 
+It handles the differences in column names between the Oakville and Orlando datasets 
+Data Cleaning: defines "Sentinel Values" (like 32767.0) 
+Feature Selection: master list of features
+Time Resolution: Sets the standard resampling rule (e.g., 15min intervals) 
+
 """
 
 from pathlib import Path
