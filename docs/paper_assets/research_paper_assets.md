@@ -19,6 +19,14 @@ All figures and tables are auto-generated from the trained models and Orlando FL
 | Fig. 9 | Seasonal variation analysis of solar irradiance (monthly distribution) | Fig9_Seasonal_Variation.png |
 | Fig. 10 | Scatter plot comparing predicted vs actual values for all models | Fig10_Scatter.png |
 | Fig. 11 | Model performance comparison across different time horizons | Fig11_Time_Horizons.png |
+| Fig. 12 | Distribution of 15-min solar irradiance on the best cumulative day | Fig12_Best_Day_Profile.png |
+| Fig. 13 | Yearly solar irradiance distribution (Total GHI sum) | Fig13_Yearly_Distribution.png |
+| Fig. 14 | Effect of training dataset length (Ordered vs Random) on RMSE | Fig14_Dataset_Length.png |
+| Fig. 15 | Seasonal model performance comparison (RMSE) | Fig15_Seasonal_Performance.png |
+| Fig. 16 | 15-min solar forecast with 95% prediction intervals (Uncertainty) | Fig16_Prediction_Intervals.png |
+| Fig. 17 | Forecast horizon comparison: 1-Day vs 1-Week performance | Fig17_Forecast_Comparison.png |
+| Fig. 18 | Confusion matrix comparison across models (Binned power levels) | Fig18_Confusion_Matrix.png |
+| Fig. 19 | Categorical accuracy comparison for all models | Fig19_Accuracy_Comparison.png |
 
 ---
 
@@ -33,3 +41,4 @@ All figures and tables are auto-generated from the trained models and Orlando FL
 | Table 5 | Training time and computational complexity comparison | Table5_Training_Complexity.csv |
 | Table 6 | Seasonal performance comparison of models | Table6_Seasonal_Performance.csv |
 | Table 7 | Feature importance ranking | Table7_Feature_Importance.csv |
+| Table 8 | Classification report (Binned power levels) | Table8_Classification_Report.csv |
